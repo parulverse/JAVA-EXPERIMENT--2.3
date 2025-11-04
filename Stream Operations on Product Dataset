@@ -1,0 +1,45 @@
+import java.util.*;
+import java.util.stream.*;
+
+class Product {
+    String name;
+    double price;
+    String category;
+
+    Product(String name, double price, String category) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+    }
+}
+
+public class ProductStreamOps {
+    public static void main(String[] args) {
+        List<Product> products = Arrays.asList(
+            new Product("TV", 20000, "Electronics"),
+            new Product("Laptop", 50000, "Electronics"),
+            new Product("Jeans", 2000, "Apparel"),
+            new Product("Shirt", 1000, "Apparel"),
+            new Product("Organic Honey", 500, "Grocery")
+        );
+
+        // Group by category
+        Map<String, List<Product>> groupedByCategory = products.stream()
+            .collect(Collectors.groupingBy(p -> p.category));
+
+        // Most expensive product per category
+        Map<String, Optional<Product>> maxPriceProduct = products.stream()
+            .collect(Collectors.groupingBy(
+                p -> p.category,
+                Collectors.maxBy(Comparator.comparingDouble(p -> p.price))
+            ));
+
+        // Average price of all products
+        double avgPrice = products.stream()
+            .collect(Collectors.averagingDouble(p -> p.price));
+
+        System.out.println("Grouped Products: " + groupedByCategory);
+        System.out.println("Max Price Product: " + maxPriceProduct);
+        System.out.println("Average Price: " + avgPrice);
+    }
+}
